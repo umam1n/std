@@ -98,9 +98,16 @@ void createListTranksaksi(list_tranksaksi &LT);
 void createListGudang(list_gudang &LG);
 void createListBarang(list_barang &LB);
 
+void mainMenu(list_users &LU);
+void login(list_users &LU);
+void registerUser(list_users &LU, infotypeUser dataUser);
+void registerMenu(list_users &LU);
 adrUser findUserByUsername(list_users &LU, const string &username);
 bool isUsernameExist(list_users &LU, const string &username);
 bool isPasswordCorrect(adrUser user, const string &password);
-void printWelcomeMessage(adrUser user);
+
+
+void adminMenu(list_gudang &LG, list_tranksaksi &LT, list_users &LU);
+void userMenu(list_gudang &LG, list_tranksaksi &LT, list_users &LU, const string &username);
 
 #endif // TUBES_H_INCLUDED
