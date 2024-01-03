@@ -1,13 +1,24 @@
-#ifndef TUBES_H_INCLUDED
-#define TUBES_H_INCLUDED
+#ifndef INVENTORI_H_INCLUDED
+#define INVENTORI_H_INCLUDED
 
 #include <string>
+#include <iostream>
 
-#define info(P) (P)->info
-#define next(P) (P)->next
-#define prev(P) (P)->prev
-#define first(L) ((L).first)
+#define firstU(P) (P)->firstU
+#define firstT(P) (P)->firstT
+#define firstG(P) (P)->firstG
+#define firstB(P) (P)->firstB
+#define infoG(P) (P)->infoG
+#define infoU(P) (P)->infoU
+#define infoT(P) (P)->infoT
+#define infoB(P) (P)->infoB
+#define nextG(P) (P)->nextG
+#define nextU(P) (P)->nextU
+#define nextB(P) (P)->nextB
+#define nextT(P) (P)->nextT
+#define prevU(P) (P)->prevU
 #define last(L) ((L).last)
+#define first(L) ((L).first)
 #define nil NULL
 
 using namespace std;
@@ -21,7 +32,6 @@ typedef struct elemuser *adrUser;
 typedef struct elemtrank *adrTrank;
 typedef struct elembar *adrBar;
 typedef struct elemgud *adrGud;
-
 
 struct users {
     string password;
@@ -41,35 +51,39 @@ struct barang {
 
 struct gudang {
     string nama;
+    int isi;
     int limit;
 };
 
 struct elemuser {
-    users info;
-    adrUser next;
-    adrUser prev;
-    adrTrank tranksaksi;
+    infotypeUser infoU;
+    adrUser nextU;
+    adrUser nextG;
+    adrUser prevU;
+    adrTrank firstT;
+    adrGud firstG;
 };
 
 struct elemtrank {
-    tranksaksi info;
-    adrTrank next;
-    adrTrank prev;
-    adrUser user;  // Relasi dengan user
+    infotypeTrank infoT;
+    adrUser nextU;
+    adrTrank nextT;
+    adrGud nextG;
 };
 
 struct elembar {
-    barang info;
-    adrBar next;
-    adrBar prev;
-    adrGud gudang;  // Relasi dengan gudang
+    infotypeBar infoB;
+    adrBar nextB;
+    adrBar firstB;
+    adrGud firstG;
+    adrGud connectedGud;
 };
 
 struct elemgud {
-    gudang info;
-    adrGud next;
-    adrTrank transaksi;
-    adrBar firstBarang;  // List barang sebagai child dari gudang
+    infotypeGud infoG;
+    adrGud nextG;
+    adrUser firstG;
+    adrBar firstB;
 };
 
 struct list_users {
@@ -79,35 +93,52 @@ struct list_users {
 
 struct list_tranksaksi {
     adrTrank first;
-    adrTrank last;
 };
 
 struct list_barang {
     adrBar first;
-    adrBar last;
 };
 
 struct list_gudang {
     adrGud first;
-    adrGud last;
 };
 
-
 void createListUser(list_users &LU);
-void createListTranksaksi(list_tranksaksi &LT);
 void createListGudang(list_gudang &LG);
 void createListBarang(list_barang &LB);
+void createListTranksaksi(list_tranksaksi &LT);
 
-void mainMenu(list_users &LU);
-void login(list_users &LU);
-void registerUser(list_users &LU, infotypeUser dataUser);
-void registerMenu(list_users &LU);
-adrUser findUserByUsername(list_users &LU, const string &username);
-bool isUsernameExist(list_users &LU, const string &username);
-bool isPasswordCorrect(adrUser user, const string &password);
+adrUser allocateUser(infotypeUser dataUser);
+adrGud allocateGud(infotypeGud dataGudang);
+adrTrank allocateTrank(infotypeTrank dataTranksaksi);
+adrBar allocateBarang(infotypeBar dataBarang);
 
+void insertUser(list_users &LU, infotypeUser dataUser);
+void deleteUser(list_users &LU, int userIdToDelete);
+void printUser(list_users &listUsers);
 
-void adminMenu(list_gudang &LG, list_tranksaksi &LT, list_users &LU);
-void userMenu(list_gudang &LG, list_tranksaksi &LT, list_users &LU, const string &username);
+void insertFirstGudang(list_gudang &listGudang, infotypeGud dataGudang);
+void deleteGudang(list_gudang &listGudang, string namaGudang);
+adrGud findGudangByUser(list_users &listUsers, string namaUser);
 
-#endif // TUBES_H_INCLUDED
+adrUser searchUser(list_users &LU, string namaUser);
+adrGud searchGudang(list_gudang &listGudang, string namaGudang);
+
+void connectUserToGudang(list_users &LU, list_gudang &LG, string namaUser, string namaGudang);
+void deleteUserWithTransactions(list_users &listUsers, list_tranksaksi &listTranksaksi, string namaUser);
+void showUserWithTransactionAndGudang(list_users &listUsers, string namaUser);
+
+void insertBarang(list_barang &listBarang, adrBar newBarang);
+adrBar searchBarang(list_barang &LB, string namaBarang);
+void connectBarangToGudang(list_barang &LB, list_gudang &LG, string namaBarang, string namaGudang);
+int countChildGudang(adrGud gudang);
+
+int selectMenu();
+void insertTranksaksi(list_tranksaksi &LT, adrTrank newTranksaksi);
+void connectUserToGudangWithTranksaksi(list_users &LU, list_tranksaksi &LT, list_gudang &LG, string namaUser, string namaGudang, string tanggalTranksaksi, string jenisTranksaksi, int jumlahTranksaksi);
+void printTranksaksi(list_tranksaksi &LT, list_users &LU, list_gudang &LG);
+
+void addBarangToGudang(list_gudang &LG, string namaBarang, string namaGudang);
+void deleteTransactionsWithUser(list_tranksaksi &LT, int userIdToDelete);
+void deleteUserWithTransactions(list_users &LU, list_tranksaksi &LT, int userIdToDelete);
+#endif // INVENTORI_H_INCLUDED
