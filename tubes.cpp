@@ -299,28 +299,43 @@ void connectUserToGudangWithTranksaksi(list_users &LU, list_tranksaksi &LT, list
     }
 }
 
-void addBarangToGudang(list_gudang &LG, string namaBarang, string namaGudang) {
+void addBarangToGudang(list_gudang &LG, string namaBarang, string namaGudang, int jumlahbarang) {
     adrGud gudang = searchGudang(LG, namaGudang);
 
     if (gudang != NULL) {
-        // Create a new barang and connect it to the gudang
-        infotypeBar dataBarang;
-        dataBarang.nama_barang = namaBarang;
+        // Check if the inventory is at its limit
+        int currentInventory = 0;
+        adrBar currentBarang = firstB(gudang);
 
-        adrBar newBarang = allocateBarang(dataBarang);
-
-        if (firstB(gudang) == NULL) {
-            firstB(gudang) = newBarang;
-        } else {
-            nextB(newBarang) = firstB(gudang);
-            firstB(gudang) = newBarang;
+        while (currentBarang != NULL) {
+            currentInventory += infoB(currentBarang).jml_barang;
+            currentBarang = nextB(currentBarang);
         }
 
-        cout << "Barang '" << namaBarang << "' berhasil ditambahkan ke Gudang '" << namaGudang << "'." << endl;
+        if (currentInventory + jumlahbarang <= infoG(gudang).limit) {
+            // Create a new barang and connect it to the gudang
+            infotypeBar dataBarang;
+            dataBarang.nama_barang = namaBarang;
+            dataBarang.jml_barang = jumlahbarang;
+
+            adrBar newBarang = allocateBarang(dataBarang);
+
+            if (firstB(gudang) == NULL) {
+                firstB(gudang) = newBarang;
+            } else {
+                nextB(newBarang) = firstB(gudang);
+                firstB(gudang) = newBarang;
+            }
+
+            cout << "Barang '" << namaBarang << "' berhasil ditambahkan ke Gudang '" << namaGudang << "'." << endl;
+        } else {
+            cout << "Gudang '" << namaGudang << "' penuh. Tidak dapat menambahkan barang." << endl;
+        }
     } else {
         cout << "Gudang '" << namaGudang << "' tidak ditemukan." << endl;
     }
 }
+
 
 
 int countChildGudang(adrGud gudang) {
