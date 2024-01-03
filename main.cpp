@@ -146,12 +146,15 @@ int main()
         case 10:
             {
             string namaBarang, namaGudang;
+            int jumlahbarang;
             cout << "Tambah Barang ke Gudang" << endl;
             cout << "Nama Barang : ";
             cin >> namaBarang;
             cout << "Nama Gudang : ";
             cin >> namaGudang;
-            addBarangToGudang(LG, namaBarang, namaGudang);
+            cout << "jumlah barang yang ingin ditambahkan :";
+            cin >> jumlahbarang;
+            addBarangToGudang(LG, namaBarang, namaGudang, jumlahbarang);
             }
         case 11:
             {
