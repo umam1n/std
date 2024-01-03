@@ -138,7 +138,7 @@ void insertTranksaksi(list_tranksaksi &LT, adrTrank newTranksaksi);
 void connectUserToGudangWithTranksaksi(list_users &LU, list_tranksaksi &LT, list_gudang &LG, string namaUser, string namaGudang, string tanggalTranksaksi, string jenisTranksaksi, int jumlahTranksaksi);
 void printTranksaksi(list_tranksaksi &LT, list_users &LU, list_gudang &LG);
 
-void addBarangToGudang(list_gudang &LG, string namaBarang, string namaGudang);
+void addBarangToGudang(list_gudang &LG, string namaBarang, string namaGudang, int jumlahbarang);
 void deleteTransactionsWithUser(list_tranksaksi &LT, int userIdToDelete);
 void deleteUserWithTransactions(list_users &LU, list_tranksaksi &LT, int userIdToDelete);
 #endif // INVENTORI_H_INCLUDED
